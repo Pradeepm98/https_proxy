@@ -2,10 +2,9 @@ import argparse
 import socket
 import sys
 from _thread import *
-import ssl
 
 try:
-    listening_port = 8081
+    listening_port = 8080
 except KeyboardInterrupt:
     print("\n[*] User has requested an interrupt")
     print("[*] Application Exiting.....")
@@ -34,10 +33,7 @@ def start():
             conn, addr = sock.accept()
             data = conn.recv(buffer_size)
 
-            context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-            connstream = context.wrap_socket(conn, server_side=True)
-
-            start_new_thread(conn_string, (connstream, data, addr))
+            start_new_thread(conn_string, (conn, data, addr))
         except KeyboardInterrupt:
             sock.close()
             print("\n[*] Graceful Shutdown")
